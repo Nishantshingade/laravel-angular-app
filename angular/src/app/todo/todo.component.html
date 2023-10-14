@@ -1,0 +1,118 @@
+<div class="container mt-5">
+  <div class="row" *ngIf="user">
+    <div class="col-md-4">
+      <span>Logged in username : {{user.name}}</span>
+    </div>
+    <div class="col-md-4">
+        <span>Logged in Email : {{user.email}}</span>
+    </div>
+    <div class="col-md-4">
+        <button (click)="logout()" class="btn btn-danger">Log out</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+       <h5 class="card-title m-3">Create To Do Task</h5>
+      <form>
+        <div class="form-group m-3">
+          <label for="todo-title">To Do Title</label>
+          <input type="text" [(ngModel)]="title" [ngModelOptions]="{standalone: true}" class="form-control" name="title" id="todo-title" aria-describedby="todo-title" placeholder="Enter Title">
+        </div>
+        <div class="form-group m-3">
+          <label for="exampleInputPassword1">To do Message</label>
+          <input type="text" [(ngModel)]="msg" [ngModelOptions]="{standalone: true}" class="form-control" name="msg" id="todo-msg" placeholder="Message">
+        </div>
+        <div class="form-group m-3">
+          <button type="submit" (click)="save()" class="btn btn-success">{{btnName}}</button>
+        </div>
+      </form>
+    </div>  
+  </div>
+  <hr>
+  <div class="mt-5">
+    <table class="table">
+      <thead>
+        <h1 *ngIf="!isResultLoaded" class="ml-3">Loading.................</h1>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Message</th>
+          <th scope="col">Status</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let todo of todoList">
+          <th scope="row">{{todo.id  }}</th>
+            <td *ngIf="todo.status=='Completed'" ><del>{{todo.title  | uppercase}}</del></td>
+            <td *ngIf="todo.status!='Completed'" >{{todo.title  | uppercase}}</td>
+            <td *ngIf="todo.status=='Completed'" ><del>{{todo.msg  | uppercase}}</del></td>
+            <td *ngIf="todo.status!='Completed'" >{{todo.msg  | uppercase}}</td>
+            <td>{{todo.status }}</td>
+            <td>
+              <button type="button" class="btn btn-outline-primary m-1" (click)="setUpdate(todo)">Edit</button>
+              <button type="button" class="btn btn-outline-success m-1" (click)="setStatus(todo,2)">Completed</button>
+              <button type="button" class="btn btn-outline-danger m-1" (click)="setStatus(todo,0)">Delete</button>
+              <button type="button" class="btn btn-outline-info m-1" (click)="openPopup(todo)">Share</button>
+            </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <hr>
+  <h1>Shared with me</h1>
+  <div class="mt-5">
+    <table class="table">
+      <thead>
+        <h1 *ngIf="!isResultLoaded" class="ml-3">Loading.................</h1>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Title</th>
+          <th scope="col">Message</th>
+          <th scope="col">Shared By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let sharedList of sharedWithUserTodoList">
+          <th scope="row">{{sharedList.id  }}</th>
+            <td *ngIf="sharedList.status=='Completed'" ><del>{{sharedList.title  | uppercase}}</del></td>
+            <td *ngIf="sharedList.status!='Completed'" >{{sharedList.title  | uppercase}}</td>
+            <td *ngIf="sharedList.status=='Completed'" ><del>{{sharedList.msg  | uppercase}}</del></td>
+            <td *ngIf="sharedList.status!='Completed'" >{{sharedList.msg  | uppercase}}</td>
+            <td>{{sharedList.name }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div
+  class="modal"
+  tabindex="-1"
+  role="dialog"
+  [ngStyle]="{'display':displayStyle}"> 
+  <div class="modal-dialog" role="document"> 
+    <div class="modal-content"> 
+      <div class="modal-header"> 
+        <h4 class="modal-title">GeeksForGeeks</h4> 
+      </div> 
+      <div class="modal-body"> 
+       <select name="shareWith" required class="form-control" [(ngModel)]="shareWith" multiple>
+        <option *ngFor="let userData of users" [value]="userData.id"> {{userData.name}} - {{userData.email}}</option>
+      </select>
+  
+      </div> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" 
+                (click)="share(todoData)"> 
+          Share 
+        </button> 
+        <button type="button" class="btn btn-danger" 
+                (click)="closePopup()"> 
+          Close 
+        </button> 
+      </div> 
+    </div> 
+  </div> 
+</div>
